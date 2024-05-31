@@ -21,7 +21,7 @@ static int	count_digits(uintptr_t n)
 		return (1);
 	while (n != 0)
 	{
-		n = n / 10;
+		n = n / 16;
 		count++;
 	}
 	return (count);
@@ -31,28 +31,26 @@ int	print_pointer(va_list list)
 {
 	int			write_ret;
 	uintptr_t	address;
+	char		c;
+	char		*a;
 
+	write_ret = write(1, "0x", sizeof(char) * 2);
 	address = (uintptr_t) va_arg(list, void *);
+	if (address == 0)
+		write_ret = write(1, "0", sizeof(char));
 	digits = count_digits(address);
-	a = (char *)malloc(sizeof(char) * (digits));
+	a = (char *) malloc (digits * sizeof(char));
 	if (a == NULL)
-		return (NULL);
-	while (digits-- > 0)
+		
+	while (digits > 0)
 	{
 		if (address % 16 < 10)
-			str[digits] = '0' + (address % 16);
-		else 
-			str[digits] = 'a' + (address % 16) - 10;
+			c = '0' + (address % 16);
+		else
+			c = 'a' + (address % 16) - 10;
+		write(1, &c, sizeof(char));
 		address /= 16;
 	}
-
-    int i;
-
-    for (i = 15; address != 0; i--) {
-        buffer[i] = (address % 16 < 10) ? '0' + (address % 16) : 'a' + (address % 16) - 10;
-        address /= 16;
-    }
-	write_ret = write(1, buffer, sizeof(char) * 18);
 	return (write_ret);
 }
 

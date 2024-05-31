@@ -12,6 +12,50 @@
 
 #include "ft_printf.h"
 
+static int	count_digits(uintptr_t n)
+{
+	int	count;
+
+	count = 0;
+	if (n == 0)
+		return (1);
+	while (n != 0)
+	{
+		n = n / 10;
+		count++;
+	}
+	return (count);
+}
+
+int	print_pointer(va_list list)
+{
+	int			write_ret;
+	uintptr_t	address;
+
+	address = (uintptr_t) va_arg(list, void *);
+	digits = count_digits(address);
+	a = (char *)malloc(sizeof(char) * (digits));
+	if (a == NULL)
+		return (NULL);
+	while (digits-- > 0)
+	{
+		if (address % 16 < 10)
+			str[digits] = '0' + (address % 16);
+		else 
+			str[digits] = 'a' + (address % 16) - 10;
+		address /= 16;
+	}
+
+    int i;
+
+    for (i = 15; address != 0; i--) {
+        buffer[i] = (address % 16 < 10) ? '0' + (address % 16) : 'a' + (address % 16) - 10;
+        address /= 16;
+    }
+	write_ret = write(1, buffer, sizeof(char) * 18);
+	return (write_ret);
+}
+
 int	print_string(va_list list)
 {
 	char	*str;
@@ -45,8 +89,8 @@ int	print_type(va_list list, char type)
 		return (print_char(list));
 	if (type == 's')
 		return (print_string(list));
-	// if (type == 'p')
-	// 	return (print_pointer(list));
+	if (type == 'p')
+		return (print_pointer(list));
 	// if (type == 'd' || type == 'i')
 	// 	return (print_num(list));
 	// if (type == 'u')

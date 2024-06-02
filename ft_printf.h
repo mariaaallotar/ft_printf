@@ -15,7 +15,14 @@
 
 # include <stdarg.h>
 # include <unistd.h>
+# include <stdlib.h>
 
 int	ft_printf(const char *str, ...);
+int	print_char(va_list list);
+int	print_string(va_list list);
+int	print_pointer(va_list list);
+int	print_num(va_list list);
+int	print_unsigned(va_list list);
+int	print_hex(va_list list, char type);
 
 #endif
